@@ -53,7 +53,7 @@ app.get("/pixiecore/v1/boot/:mac", ({ params: { mac } }, res) => {
 
   const pxeScriptFile = tempfile();
   const isoName =
-    mapping[mac.toLowerCase() || fail("ISO corresponding to MAC not found")];
+    mapping[mac.toLowerCase()] || fail("ISO corresponding to MAC not found");
   const pxeScript = `#!ipxe
 dhcp && sanboot http://${selfIP}/images/${isoName}
 `;
