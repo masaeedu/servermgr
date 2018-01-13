@@ -54,7 +54,7 @@ const fail = e => {
 
 // -- Code
 
-const baseUrl = "http://192.168.10.229";
+const baseUrl = "http://localhost:1234";
 
 const fetchInfo = pipe([
   fetch_,
@@ -63,14 +63,31 @@ const fetchInfo = pipe([
   map(sortBy(prop("id")))
 ])("/bmc");
 
-const toggles = {
+const customFields = {
   "System Power": x => {
     const on = x.content["System Power"] === "on";
     post_(`/bmc/${x.id}/power`, { on: !on }).fork(cerr, clog);
   }
 };
 
-const Table = ({ fields, data, toggles }) => (
+const Row = fields => data => (
+  <tr>
+    <th>{data.id}</th>
+    {fields.map(f => (
+      <td key={f}>
+        {customFields[f] ? (
+          <a className="button" onClick={() => customFields[f](data)}>
+            {data.content[f]}
+          </a>
+        ) : (
+          data.content[f]
+        )}
+      </td>
+    ))}
+  </tr>
+);
+
+const Table = fields => data => (
   <table className="table">
     <thead>
       <tr>
@@ -78,29 +95,14 @@ const Table = ({ fields, data, toggles }) => (
         {fields.map(f => <th key={f}>{f}</th>)}
       </tr>
     </thead>
-    <tbody>
-      {data.map(x => (
-        <tr>
-          <th>{x.id}</th>
-          {fields.map(f => (
-            <td key={f}>
-              {toggles[f] ? (
-                <a className="button" onClick={() => toggles[f](x)}>
-                  {x.content[f]}
-                </a>
-              ) : (
-                x.content[f]
-              )}
-            </td>
-          ))}
-        </tr>
-      ))}
-    </tbody>
+    <tbody>{data.map(Row(fields))}</tbody>
   </table>
 );
 
 const tabulate = data => {
-  const dupedFields = chain(pipe([x => x.content, keys]))(data);
+  const contentKeys = pipe([prop("content"), keys]);
+  const dupedFields = chain(contentKeys)(data);
+
   const fields = [...new Set(dupedFields)];
 
   return { fields, data };
@@ -111,14 +113,14 @@ class App extends Component {
     super(props);
     this.state = { nodes: [] };
 
-    setInterval(
-      () => fetchInfo.fork(fail, nodes => this.setState({ nodes })),
-      1000
-    );
+    const updateState = () =>
+      fetchInfo.fork(fail, nodes => this.setState({ nodes }));
+    setInterval(updateState, 1000);
   }
 
   render() {
-    return <div>{Table({ ...tabulate(this.state.nodes), toggles })}</div>;
+    const { data, fields } = tabulate(this.state.nodes);
+    return <div>{Table(fields)(data)}</div>;
   }
 }
 
