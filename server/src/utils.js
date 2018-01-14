@@ -22,13 +22,15 @@ export const parseTable = parseByLines("|")(([k, ...v]) => ({ [k]: v }));
 export const parseDict = parseByLines(":")(([k, v]) => ({ [k]: v }));
 
 export const discoverBMCs = () => {
-  const rawOutput = exec("ipmiutil discover").stdout;
+  const rawOutput = exec("ipmiutil discover", { silent: true }).stdout;
 
   return parseDiscoverBMCOutput(rawOutput);
 };
 
 export const remote = ({ ip, username, password }) => cmd =>
-  exec(`ipmitool -I lanplus -H ${ip} -U ${username} -P ${password} ${cmd}`);
+  exec(`ipmitool -I lanplus -H ${ip} -U ${username} -P ${password} ${cmd}`, {
+    silent: true
+  });
 
 export const fail = reason => {
   throw new Error(reason);
