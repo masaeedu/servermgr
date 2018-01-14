@@ -47,7 +47,7 @@ const tabulate = data => {
 };
 
 const actions = {
-  SetPower: {
+  Power: {
     fields: {
       state: {
         type: "string",
@@ -120,7 +120,6 @@ const ActionUITabs = labels => ({ activeAction }, set) => {
   );
 };
 const ActionUI = actions => (state, set) => {
-  console.log(actions, state);
   const { actionStates: states, activeAction: active, nodes } = state;
 
   const labels = keys(actions);
@@ -160,11 +159,18 @@ const customFields = {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { nodes: [], activeAction: "SetPower", actionStates: {} };
+    this.state = { nodes: [], activeAction: "Power", actionStates: {} };
+  }
 
-    const updateStatus = () =>
-      fetchInfo.fork(fail, nodes => this.updateState({ nodes }));
-    setInterval(updateStatus, 500);
+  componentDidMount() {
+    const statusInterval = 500;
+    const updateStatus = () => {
+      fetchInfo.fork(fail, nodes => {
+        this.updateState({ nodes });
+        setTimeout(updateStatus, statusInterval);
+      });
+    };
+    updateStatus();
   }
 
   updateState(next) {

@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "start": "nodemon src --exec babel-node"
+    "start": "nodemon src --ignore config --exec babel-node"
   },
   "license": "MIT",
   "dependencies": {
@@ -12,10 +12,12 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "^4.16.2",
+    "fs-extra": "^5.0.0",
     "ip": "^1.1.5",
     "md5": "^2.2.1",
     "micro": "^9.0.2",
     "morgan": "^1.9.0",
+    "mz": "^2.7.0",
     "onml": "^0.4.1",
     "shelljs": "^0.7.8",
     "tempy": "^0.2.1"
@@ -29,8 +31,6 @@
     "prettier": "^1.9.2"
   },
   "ava": {
-    "require": [
-      "babel-register"
-    ]
+    "require": ["babel-register"]
   }
 }

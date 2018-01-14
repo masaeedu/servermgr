@@ -1,4 +1,6 @@
-import { exec } from "shelljs";
+import { exec } from "mz/child_process";
+
+export const exec2str = async cmd => (await exec(cmd)).join("");
 
 export const parseDiscoverBMCOutput = text => {
   const dataRegex = /\d{2}\|.+\|(.+)\|/;
@@ -21,16 +23,16 @@ export const parseByLines = separator => f => text =>
 export const parseTable = parseByLines("|")(([k, ...v]) => ({ [k]: v }));
 export const parseDict = parseByLines(":")(([k, v]) => ({ [k]: v }));
 
-export const discoverBMCs = () => {
-  const rawOutput = exec("ipmiutil discover", { silent: true }).stdout;
-
+export const discoverBMCs = async () => {
+  const rawOutput = await exec2str("ipmiutil discover");
+  console.log(rawOutput);
   return parseDiscoverBMCOutput(rawOutput);
 };
 
 export const remote = ({ ip, username, password }) => cmd =>
-  exec(`ipmitool -I lanplus -H ${ip} -U ${username} -P ${password} ${cmd}`, {
-    silent: true
-  });
+  exec2str(
+    `ipmitool -I lanplus -H ${ip} -U ${username} -P ${password} ${cmd} || echo "cmd failed"`
+  );
 
 export const fail = reason => {
   throw new Error(reason);
