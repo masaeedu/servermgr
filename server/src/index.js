@@ -26,8 +26,8 @@ process.on("unhandledRejection", up => {
   throw up;
 });
 
-const imgPath = "/home/ankh/images";
-const ipxeSrcLocation = "/media/ankh/data/depot/git/ipxe/src";
+const imgPath = "/app/server/config/images";
+const ipxeSrcLocation = "/app/ipxe/src";
 const port = 1234;
 
 const app = express();
