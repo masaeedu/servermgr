@@ -19,15 +19,15 @@ import {
   exec2str as exec
 } from "./utils";
 
-import mapping from "../config/mapping";
-import credentials from "../config/credentials";
+import mapping from "/config/mapping";
+import credentials from "/config/credentials";
 
 process.on("unhandledRejection", up => {
   throw up;
 });
 
 const imgPath = "/app/server/config/images";
-const ipxeSrcLocation = "/app/ipxe/src";
+const ipxeSrcLocation = "/ipxe/src";
 const port = 1234;
 
 const app = express();

@@ -27,7 +27,8 @@ import {
 } from "../fp";
 import { Table } from "./Table";
 
-const baseUrl = "http://localhost:1234";
+const location = window.location;
+const baseUrl = `${location.protocol}//${location.hostname}:${1234}`;
 const { get, post } = rest(baseUrl);
 
 const fetchInfo = pipe([
