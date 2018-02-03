@@ -4,14 +4,18 @@ RUN nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
 RUN nix-channel --update
 RUN nix-env -iA nixpkgs.ipmiutil
 
-# Prepare runtime image
 FROM alpine
 RUN apk update && apk upgrade
-RUN apk add bash binutils build-base gcc git ipmitool make mtools nodejs perl xz xz-dev
+
+# Install tools for runtime builds
+RUN apk add bash binutils build-base gcc git make mtools perl xz xz-dev
+
+# Install server-specific tools
+RUN apk add ipmitool nodejs
 RUN npm i -g yarn
 
 # Add ipxe source code for runtime kernel prep
-COPY ./ipxe /ipxe
+COPY ./vendor/ipxe /ipxe
 RUN cd /ipxe/src && make bin/undionly.kpxe
 
 # Add ipmiutil from nix image
