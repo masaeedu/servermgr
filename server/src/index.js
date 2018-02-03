@@ -23,7 +23,7 @@ import mapping from "/config/mapping";
 import credentials from "/config/credentials";
 
 process.on("unhandledRejection", up => {
-  throw up;
+  console.error(up);
 });
 
 const imgPath = "/images";
