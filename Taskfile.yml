@@ -1,12 +1,18 @@
 # Tasks
-default: { deps: [start] }
+default:
+  deps:
+  - start
 
 start:
-  deps: [upload, build]
+  deps:
+  - upload
+  - build
   cmds:
   - docker-compose up --force-recreate
 
 build:
+  deps:
+  - submodule
   cmds:
   - docker-compose build
 
@@ -16,6 +22,11 @@ upload:
     vars: { DIR: ./config, VOL: config }
   - task: upload_to_volume
     vars: { DIR: ./images, VOL: images }
+
+submodule:
+  cmds:
+  - git submodule init
+  - git submodule update
 
 # Utils
 upload_to_volume:
