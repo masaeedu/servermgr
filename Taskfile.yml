@@ -25,8 +25,7 @@ upload:
 
 submodule:
   cmds:
-  - git submodule init
-  - git submodule update
+  - git submodule update --init --recursive
 
 # Utils
 upload_to_volume:
