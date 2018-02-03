@@ -1,0 +1,35 @@
+# Tasks
+default:
+  deps:
+  - start
+
+start:
+  deps:
+  - upload
+  - build
+  cmds:
+  - docker-compose up --force-recreate
+
+build:
+  deps:
+  - submodule
+  cmds:
+  - docker-compose build
+
+upload:
+  cmds:
+  - task: upload_to_volume
+    vars: { DIR: ./config, VOL: config }
+  - task: upload_to_volume
+    vars: { DIR: ./images, VOL: images }
+
+submodule:
+  cmds:
+  - git submodule update --init --recursive
+
+# Utils
+upload_to_volume:
+  cmds:
+  - docker create --name=helper -v {{.VOL}}:/x busybox
+  - docker cp {{.DIR}}/. helper:/x
+  - docker rm helper

@@ -1,0 +1,29 @@
+version: '3.1'
+
+volumes:
+  config: { external: true }
+  images: { external: true }
+
+services:
+  pixiecore:
+    build:
+      context: .
+      dockerfile: dockerfiles/pixiecore.Dockerfile
+    ports: ["67:67", "69:69", "4011:4011"]
+    network_mode: "host"
+
+  server:
+    build:
+      context: .
+      dockerfile: dockerfiles/server.Dockerfile
+    ports: ["1234:1234"]
+    network_mode: "host"
+    volumes:
+    - config:/config
+    - images:/images
+
+  client:
+    build:
+      context: .
+      dockerfile: dockerfiles/client.Dockerfile
+    ports: ["3000:3000"]

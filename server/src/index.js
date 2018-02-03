@@ -2,7 +2,7 @@ import express from "express";
 import { address } from "ip";
 import bodyParser from "body-parser";
 import { file as tempfile } from "tempy";
-import { writeFile, exists } from "fs-extra";
+import { writeFile, exists, createFile, remove } from "fs-extra";
 import { join } from "path";
 import md5 from "md5";
 import cors from "cors";
@@ -19,15 +19,15 @@ import {
   exec2str as exec
 } from "./utils";
 
-import mapping from "../config/mapping";
-import credentials from "../config/credentials";
+import mapping from "/config/mapping";
+import credentials from "/config/credentials";
 
 process.on("unhandledRejection", up => {
-  throw up;
+  console.error(up);
 });
 
-const imgPath = "/home/ankh/images";
-const ipxeSrcLocation = "/media/ankh/data/depot/git/ipxe/src";
+const imgPath = "/images";
+const ipxeSrcLocation = "/ipxe/src";
 const port = 1234;
 
 const app = express();
@@ -98,7 +98,7 @@ app.post("/bmc/:ip/mapping", jsonParser, async (req, res) => {
     mapping[mac] = iso;
   }
   console.log(ip, iso, macs);
-  await writeFile("config/mapping.json", JSON.stringify(mapping));
+  await writeFile("/config/mapping.json", JSON.stringify(mapping));
 
   res.json(macs);
 });
@@ -114,7 +114,7 @@ app.post("/creds/:ip", jsonParser, async (req, res) => {
   const creds = req.body;
 
   credentials[ip] = creds;
-  await writeFile("config/credentials.json", JSON.stringify(credentials));
+  await writeFile("/config/credentials.json", JSON.stringify(credentials));
 
   res.status(200).send();
 });
@@ -140,10 +140,19 @@ cp -f bin/undionly.kpxe ${kernelFile}
 `;
 
   if (!await exists(kernelFile)) {
+    const lockFile = `${kernelFile}.lock`;
+
+    // Can't just exit, pixiecore will interpret this as "don't need to provision this MAC"
+    while (await exists(lockFile))
+      await new Promise(resolve => setTimeout(() => resolve(), 1000));
+
+    await createFile(lockFile);
+
     await writeFile(pxeScriptFile, pxeScript);
     await writeFile(buildScriptFile, buildScript);
     await exec(`chmod +x ${buildScriptFile}`);
     await exec(buildScriptFile);
+    await remove(lockFile);
   }
 
   const response = {
