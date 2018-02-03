@@ -26,7 +26,7 @@ process.on("unhandledRejection", up => {
   throw up;
 });
 
-const imgPath = "/app/server/config/images";
+const imgPath = "/images";
 const ipxeSrcLocation = "/ipxe/src";
 const port = 1234;
 
@@ -98,7 +98,7 @@ app.post("/bmc/:ip/mapping", jsonParser, async (req, res) => {
     mapping[mac] = iso;
   }
   console.log(ip, iso, macs);
-  await writeFile("config/mapping.json", JSON.stringify(mapping));
+  await writeFile("/config/mapping.json", JSON.stringify(mapping));
 
   res.json(macs);
 });
@@ -114,7 +114,7 @@ app.post("/creds/:ip", jsonParser, async (req, res) => {
   const creds = req.body;
 
   credentials[ip] = creds;
-  await writeFile("config/credentials.json", JSON.stringify(credentials));
+  await writeFile("/config/credentials.json", JSON.stringify(credentials));
 
   res.status(200).send();
 });
