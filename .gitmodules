@@ -2,3 +2,7 @@
 	path = vendor/ipxe
 	url = git://git.ipxe.org/ipxe.git
 	branch = master
+[submodule "vendor/netboot"]
+	path = vendor/netboot
+	url = https://github.com/masaeedu/netboot.git
+	branch = master
