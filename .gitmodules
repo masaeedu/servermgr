@@ -1,4 +1,4 @@
 [submodule "ipxe"]
-	path = server/ipxe
+	path = vendor/ipxe
 	url = git://git.ipxe.org/ipxe.git
 	branch = master

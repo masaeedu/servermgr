@@ -11,7 +11,7 @@ RUN apk add bash binutils build-base gcc git ipmitool make mtools nodejs perl xz
 RUN npm i -g yarn
 
 # Add ipxe source code for runtime kernel prep
-COPY ./server/ipxe /ipxe
+COPY ./ipxe /ipxe
 RUN cd /ipxe/src && make bin/undionly.kpxe
 
 # Add ipmiutil from nix image
