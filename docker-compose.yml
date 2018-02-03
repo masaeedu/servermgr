@@ -4,24 +4,19 @@ volumes:
   config: { external: true }
   images: { external: true }
 
-networks:
-  internal: {}
-
 services:
   pixiecore:
     build: ./pixiecore
     ports: ["67:67", "69:69", "4011:4011"]
-    networks:
-    - internal
+    network_mode: "host"
 
   server:
     build: ./server
     ports: ["1234:1234"]
+    network_mode: "host"
     volumes:
     - config:/config
     - images:/images
-    networks:
-    - internal
 
   client:
     build: ./client
