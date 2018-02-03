@@ -7,7 +7,7 @@ RUN nix-env -iA nixpkgs.ipmiutil
 # Prepare runtime image
 FROM alpine
 RUN apk update && apk upgrade
-RUN apk add bash git nodejs ipmitool
+RUN apk add bash binutils gcc git ipmitool make mtools nodejs perl xz xz-dev
 RUN npm i -g yarn
 
 # Add ipxe source code for runtime kernel prep
