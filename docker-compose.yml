@@ -6,12 +6,16 @@ volumes:
 
 services:
   pixiecore:
-    build: ./pixiecore
+    build:
+      context: .
+      dockerfile: dockerfiles/pixiecore.Dockerfile
     ports: ["67:67", "69:69", "4011:4011"]
     network_mode: "host"
 
   server:
-    build: ./server
+    build:
+      context: .
+      dockerfile: dockerfiles/server.Dockerfile
     ports: ["1234:1234"]
     network_mode: "host"
     volumes:
@@ -19,5 +23,7 @@ services:
     - images:/images
 
   client:
-    build: ./client
+    build:
+      context: .
+      dockerfile: dockerfiles/client.Dockerfile
     ports: ["3000:3000"]

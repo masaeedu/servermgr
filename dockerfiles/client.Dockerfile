@@ -1,7 +1,7 @@
 FROM node:9
 
 # Add and build code
-ADD . /app
+COPY ./client /app
 WORKDIR /app
 RUN yarn
 
