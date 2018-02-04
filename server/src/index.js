@@ -129,34 +129,8 @@ app.get("/pixiecore/v1/boot/:mac", async ({ params: { mac } }, res) => {
 dhcp && sanboot http://${selfIP}:${port}/images/${isoName}
 `;
 
-  const hash = md5(mac + pxeScript);
-
-  const buildScriptFile = tempfile();
-  const kernelFile = join(imgPath, hash);
-  const buildScript = `#!/usr/bin/env bash
-cd ${ipxeSrcLocation}
-make bin/undionly.kpxe EMBED=${pxeScriptFile}
-cp -f bin/undionly.kpxe ${kernelFile}
-`;
-
-  if (!await exists(kernelFile)) {
-    const lockFile = `${kernelFile}.lock`;
-
-    // Can't just exit, pixiecore will interpret this as "don't need to provision this MAC"
-    while (await exists(lockFile))
-      await new Promise(resolve => setTimeout(() => resolve(), 1000));
-
-    await createFile(lockFile);
-
-    await writeFile(pxeScriptFile, pxeScript);
-    await writeFile(buildScriptFile, buildScript);
-    await exec(`chmod +x ${buildScriptFile}`);
-    await exec(buildScriptFile);
-    await remove(lockFile);
-  }
-
   const response = {
-    kernel: `http://${selfIP}:${port}/images/${hash}`
+    "ipxe-script": pxeScript
   };
 
   res.json(response);
