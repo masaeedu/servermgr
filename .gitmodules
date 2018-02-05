@@ -1,4 +1,4 @@
 [submodule "vendor/netboot"]
 	path = vendor/netboot
-	url = https://github.com/masaeedu/netboot.git
+	url = https://github.com/google/netboot.git
 	branch = master
