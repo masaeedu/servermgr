@@ -1,2 +1,2 @@
 config
-images
+images/*.iso

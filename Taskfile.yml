@@ -1,7 +1,8 @@
 # Tasks
 default:
-  deps:
-  - start
+  cmds:
+  - task: cleanup
+  - task: start
 
 start:
   deps:
@@ -28,6 +29,10 @@ submodule:
   - git submodule update --init --recursive
 
 # Utils
+cleanup:
+  cmds:
+  - docker rm -f helper servermgr_client_1 servermgr_server_1 || true
+
 upload_to_volume:
   cmds:
   - docker create --name=helper -v {{.VOL}}:/x busybox

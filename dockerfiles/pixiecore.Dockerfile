@@ -9,8 +9,8 @@ RUN apk add go
 ENV PATH="/root/go/bin:${PATH}"
 RUN go get -u github.com/jteeuwen/go-bindata/...
 
-COPY ./vendor/netboot /usr/lib/go/src/github.com/masaeedu/netboot
-WORKDIR /usr/lib/go/src/github.com/masaeedu/netboot
+COPY ./vendor/netboot /usr/lib/go/src/github.com/google/netboot
+WORKDIR /usr/lib/go/src/github.com/google/netboot
 
 # Build go-embedded data
 RUN cd third_party && make
