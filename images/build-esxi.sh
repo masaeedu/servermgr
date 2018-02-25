@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Example usage:
-# ./build-esxi.sh 192.168.10.214 ks.cfg ./esxi5.iso ./esxi5-auto.iso
+# ./build-esxi.sh 192.168.10.106 ks.cfg ./esxi5.iso ./esxi5-auto.iso
 
 set -e
 
@@ -11,7 +11,7 @@ INPUT_ISO=$3
 OUTPUT_ISO=$4
 
 WORKDIR=$(mktemp -d)
-URL=http://$IP:8080/$KS_SCRIPT
+URL=http://$IP:1234/images/$KS_SCRIPT
 MOUNTPOINT=/mnt/$(basename $(mktemp -u) | cut -d '.' -f2)
 
 # Extract
