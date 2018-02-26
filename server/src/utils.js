@@ -24,7 +24,7 @@ export const parseTable = parseByLines("|")(([k, ...v]) => ({ [k]: v }));
 export const parseDict = parseByLines(":")(([k, v]) => ({ [k]: v }));
 
 export const discoverBMCs = async () => {
-  const rawOutput = await exec2str("ipmiutil discover");
+  const rawOutput = await exec2str("ipmiutil discover -m");
   console.log(rawOutput);
   return parseDiscoverBMCOutput(rawOutput);
 };
